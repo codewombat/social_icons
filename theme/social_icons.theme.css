@@ -1,0 +1,35 @@
+/**
+ * Style the social icons list items.
+ */
+
+ul.social-icons {
+    list-style: none;
+    margin-bottom: 0;
+}
+
+ul.social-icons li {
+    display: inline-block;
+    margin: 0;
+}
+
+ul.social-icons a {
+    color: #6b6b6b;
+    margin: 0 8px;
+    -webkit-transition: color 0.1s ease-in-out;
+    transition: color 0.1s ease-in-out;
+}
+
+ul.social-icons li:last-child a {
+    margin-right: 0;
+}
+
+ul.social-icons a:link,
+ul.social-icons a:visited {
+    color: #6b6b6b;
+}
+
+ul.social-icons a:hover,
+ul.social-icons a:active,
+ul.social-icons a:focus {
+    color: #333333;
+}

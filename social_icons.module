@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Defines a block to place social media icon links in a layout.
+ */
+
+
+/**
+ * Implements hook_block_info().
+ */
+function social_icons_block_info() {
+  $blocks = array();
+
+  $blocks['social_icons'] = array(
+    'info' => t('Social icons'),
+    'description' => t('A list of social media icons rendered using FontAwesome.'),
+  );
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function social_icons_block_view($delta = '', $settings = array()) {
+  $block = array();
+
+  if ($delta === 'social_icons') {
+    $block['subject'] = '';
+    $block['content'] = array(
+      '#theme' => 'item_list',
+      '#items' => social_icons_list($settings),
+      '#attributes' => array(
+        'class' => array('social-icons'),
+      ),
+      '#attached' => array(
+        'css' => array(backdrop_get_path('module', 'social_icons') . '/theme/social_icons.theme.css'),
+      ),
+    );
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function social_icons_block_configure($delta, $settings) {
+  $form = array();
+
+  if ($delta === 'social_icons') {
+    $settings += array(
+      'twitter' => '',
+      'facebook' => '',
+      'pinterest' => '',
+      'instagram' => '',
+      'rss' => '',
+    );
+
+    $form['twitter'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Twitter'),
+      '#field_prefix' => 'https://twitter.com/',
+      '#default_value' => $settings['twitter'],
+    );
+
+    $form['facebook'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Facebook'),
+      '#field_prefix' => 'https://www.facebook.com/',
+      '#default_value' => $settings['facebook'],
+    );
+
+    $form['pinterest'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Pinterest'),
+      '#field_prefix' => 'https://www.pinterest.com/',
+      '#field_suffix' => '/',
+      '#default_value' => $settings['pinterest'],
+    );
+
+    $form['instagram'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Instagram'),
+      '#field_prefix' => 'https://instagram.com/',
+      '#field_suffix' => '/',
+      '#default_value' => $settings['instagram'],
+    );
+
+    $form['rss'] = array(
+      '#type' => 'textfield',
+      '#title' => t('RSS feed'),
+      '#description' => t('Enter the full URL of your RSS feed.'),
+      '#default_value' => $settings['rss'],
+    );
+
+    return $form;
+  }
+
+  return $form;
+}
+
+/**
+ * Returns an item list of social media icon links.
+ *
+ * @param $settings
+ *   An associative array of account / page names and links, including:
+ *   - twitter: a Twitter username.
+ *   - facebook: a Facebook page or username.
+ *   - pinterest: a Pinterest board or username.
+ *   - instagram: an Instagram username.
+ *   - rss: a full URL to the site's RSS feed.
+ */
+function social_icons_list($settings) {
+  $settings += array(
+    'twitter' => '',
+    'facebook' => '',
+    'pinterest' => '',
+    'instagram' => '',
+    'rss' => '',
+  );
+
+  // Loop over all available social media icons to generate the item list.
+  $items = array();
+
+  foreach ($settings as $key => $value) {
+    if (!empty($value)) {
+      // Determine the URL to link to for the icon.
+      switch ($key) {
+        case 'twitter':
+        case 'instagram':
+          $url = 'https://' . $key . '.com/' . $value;
+          break;
+
+        case 'facebook':
+        case 'pinterest':
+          $url = 'https://www.' . $key . '.com/' . $value;
+          break;
+
+        default:
+          $url = $value;
+      }
+
+      $items[] = l('<span class="fa fa-' . $key . '" title=""></i>', $url, array('html' => TRUE, 'attributes' => array('target' => '_blank', 'class' => array($key))));
+    }
+  }
+
+  return $items;
+}
