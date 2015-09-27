@@ -1,5 +1,7 @@
 name = Social Icons
 description = Defines a block to place social media icon links in a layout.
+version = 0.1.0
 backdrop = 1.x
+type = module
 package = Layout
 dependencies[] = font_awesome
